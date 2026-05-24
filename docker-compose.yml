@@ -1,0 +1,36 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  api-gateway:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./gateway/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - rental-service
+
+  rental-service:
+    build:
+      context: ./rental-service
+      dockerfile: Dockerfile
+    ports:
+      - "8001:80"
+    environment:
+      - DB_HOST=postgres-db
+      - DB_NAME=ecomove_db
+      - DB_USER=ecomove_admin
+      - DB_PASSWORD=SecretPassword123!
+      - JWT_SECRET=PireusSuperSecretKey2026_IDS_QualityGateA!!
+    depends_on:
+      - postgres-db
+
+  postgres-db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=ecomove_db
+      - POSTGRES_USER=ecomove_admin
+      - POSTGRES_PASSWORD=SecretPassword123!
+    ports:
+      - "5432:5432"
