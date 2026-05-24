@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>EcoMove Pireus Console</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="card">
+        <h2>Simulatore Sblocco Veicolo (IF-3 / CU-01)</h2>
+        <input type="text" id="qr_input" placeholder="Codice QR (es. MP-PIREUS-0482)" value="MP-PIREUS-0482">
+        <textarea id="jwt_input" rows="3">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91dGVudGUiOjEsIm5vbWUiOiJGZWRlcmljbyIsImV4cCI6MTc5ODc5MDQwMH0.b6M8wM-9kP7g7fV78-V6_IDS_Example_Signature</textarea>
+        <button id="btn_sblocco">Invia Comando di Sblocco</button>
+        <div id="api_result" class="result hidden"></div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
