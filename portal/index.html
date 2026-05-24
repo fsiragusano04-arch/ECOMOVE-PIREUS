@@ -2,17 +2,164 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title>EcoMove Pireus Console</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoMove Pireus - Fleet Telemetry & Operations</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="card">
-        <h2>Simulatore Sblocco Veicolo (IF-3 / CU-01)</h2>
-        <input type="text" id="qr_input" placeholder="Codice QR (es. MP-PIREUS-0482)" value="MP-PIREUS-0482">
-        <textarea id="jwt_input" rows="3">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91dGVudGUiOjEsIm5vbWUiOiJGZWRlcmljbyIsImV4cCI6MTc5ODc5MDQwMH0.b6M8wM-9kP7g7fV78-V6_IDS_Example_Signature</textarea>
-        <button id="btn_sblocco">Invia Comando di Sblocco</button>
-        <div id="api_result" class="result hidden"></div>
+
+    <div class="app-shell">
+        
+        <aside class="sidebar">
+            <div class="brand">
+                <h1>EcoMove <span>Pireus</span></h1>
+                <span class="status-indicator">● LIVE CORE CONNECTED</span>
+            </div>
+
+            <div class="nav-tabs">
+                <button class="tab-btn active">⚡ Sblocco Mezzo (IF-3)</button>
+            </div>
+
+            <div class="sidebar-content">
+                <form id="rental-form" onsubmit="return false;">
+                    <div class="input-box">
+                        <label>Codice Identificativo QR</label>
+                        <input type="text" id="qr_input" value="MP-PIREUS-0482" required>
+                    </div>
+
+                    <div class="input-box">
+                        <label>Security Token (JWT Stateless)</label>
+                        <textarea id="jwt_input" rows="5" required>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91dGVudGUiOjEsIm5vbWUiOiJGZWRlcmljbyIsImV4cCI6MTc5ODc5MDQwMH0.b6M8wM-9kP7g7fV78-V6_IDS_Example_Signature</textarea>
+                    </div>
+
+                    <button type="button" id="btn_sblocco" class="action-btn">Esegui Sblocco Sincrono</button>
+                </form>
+
+                <div class="terminal-container">
+                    <label>Risposta API Gateway & Microservizio</label>
+                    <div id="api_result" class="terminal-box">
+                        <span class="terminal-placeholder">In attesa di comandi sulla rete interna...</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-viewport">
+            <div class="map-viewport">
+                <div class="map-overlay"></div>
+                
+               <!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoMove Pireus - Operations & Fleet Console</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">EcoMove <span>Pireus</span></div>
+                <div class="system-status">● GATEWAY ONLINE (PORT: 8080)</div>
+            </div>
+
+            <div class="module-tabs">
+                <button class="tab-btn active">⚡ OPERAZIONI SPRINT 1</button>
+            </div>
+
+            <div class="sidebar-body">
+                <div class="control-card">
+                    <div class="form-group">
+                        <label>ID Asset / Codice QR Veicolo</label>
+                        <input type="text" id="qr_input" value="MP-PIREUS-0482">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Token Crittografico Autenticazione (JWT)</label>
+                        <textarea id="jwt_input" rows="3">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91dGVudGUiOjEsIm5vbWUiOiJGZWRlcmljbyIsImV4cCI6MTc5ODc5MDQwMH0.b6M8wM-9kP7g7fV78-V6_IDS_Example_Signature</textarea>
+                    </div>
+
+                    <div class="action-grid">
+                        <button type="button" id="btn_sblocco" class="btn-main">⚡ Invia Comando Sblocco</button>
+                        <button type="button" id="btn_ping" class="btn-secondary">🔔 Suona Clacson</button>
+                        <button type="button" id="btn_luci" class="btn-secondary">💡 Accendi Luci</button>
+                    </div>
+                </div>
+
+                <div class="terminal-wrapper">
+                    <label>Log Flussi API Gateway & Microservizi</label>
+                    <div id="api_result" class="terminal-output">
+                        <span class="system-idle">> In attesa di comandi di telemetria...</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="map-viewport">
+            
+            <div class="interactive-map" id="map-container">
+                <div class="map-grid-lines"></div>
+                
+                <div class="map-road road-h" style="top: 35%;"></div>
+                <div class="map-road road-h" style="top: 70%;"></div>
+                <div class="map-road road-v" style="left: 40%;"></div>
+                
+                <div class="district-tag" style="top: 15%; left: 15%;">Porto di Pireo - Zona 1</div>
+                <div class="district-tag" style="top: 80%; left: 55%;">Centro Urbano Pireo</div>
+
+                <div class="vehicle-marker available" id="marker-482" style="top: 32%; left: 38.5%;" onclick="selezionaVeicolo('MP-PIREUS-0482', '94%', 'DISPONIBILE')">
+                    <span class="marker-icon">🛵</span>
+                    <div class="marker-popup">
+                        <strong>MP-PIREUS-0482</strong><br>
+                        Batteria: 94%<br>
+                        Stato: Libero
+                    </div>
+                </div>
+
+                <div class="vehicle-marker maintenance" id="marker-102" style="top: 67%; left: 38.5%;" onclick="selezionaVeicolo('MP-PIREUS-0102', '12%', 'IN_MANUTENZIONE')">
+                    <span class="marker-icon">🛵</span>
+                    <div class="marker-popup">
+                        <strong>MP-PIREUS-0102</strong><br>
+                        Batteria: 12%<br>
+                        Stato: Manutenzione
+                    </div>
+                </div>
+
+                <div class="vehicle-marker available" id="marker-911" style="top: 32%; left: 75%;" onclick="selezionaVeicolo('MP-PIREUS-0911', '81%', 'DISPONIBILE')">
+                    <span class="marker-icon">🛵</span>
+                    <div class="marker-popup">
+                        <strong>MP-PIREUS-0911</strong><br>
+                        Batteria: 81%<br>
+                        Stato: Libero
+                    </div>
+                </div>
+            </div>
+
+            <div class="telemetry-header">
+                <div class="telemetry-card">
+                    <span class="t-title">Flotta Totale</span>
+                    <span class="t-value">205</span>
+                </div>
+                <div class="telemetry-card">
+                    <span class="t-title text-emerald">Disponibili</span>
+                    <span class="t-value text-emerald" id="stat-disponibili">142</span>
+                </div>
+                <div class="telemetry-card">
+                    <span class="t-title text-blue">In Uso</span>
+                    <span class="t-value text-blue" id="stat-uso">58</span>
+                </div>
+                <div class="telemetry-card">
+                    <span class="t-title text-red">Manutenzione</span>
+                    <span class="t-value text-red">5</span>
+                </div>
+            </div>
+        </main>
+
     </div>
+
     <script src="app.js"></script>
 </body>
 </html>
